@@ -11,7 +11,7 @@ const registerUser = async (password) => {
     }
 }
 
-const authenticateUser = async (password, hashValue) => {
+const authenticateUser = async(password, hashValue) => {
     try {
         return bcrypt.compare(password, hashValue);
     }

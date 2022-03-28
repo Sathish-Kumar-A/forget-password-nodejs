@@ -1,11 +1,7 @@
 const randomToken = require("random-token");
 const nodemailer = require("nodemailer");
 
-const sendMailNode = async(email) => {
-    console.log("sendMailNode",email)
-    let token = generateRandomString();
-    console.log("sending mail", token);
-    let result;
+const sendMailNode = async(email,token) => {
     var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -21,7 +17,7 @@ const sendMailNode = async(email) => {
         html: `The token to change password is <b>${token}</b>`
     }
 
-    transporter.sendMail(mailOptions, (error, info) => {
+   transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log("error", error);
             return { success: false, message: "Mail sending failed" };
@@ -31,6 +27,7 @@ const sendMailNode = async(email) => {
             return { success: true, message: "Mail sent Successfully" };
         }
     });
+    
 }
 
 const generateRandomString = () => {
