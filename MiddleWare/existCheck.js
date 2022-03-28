@@ -32,7 +32,7 @@ const userPresent = async (req, res, next) => {
         else {
              res.status(403).send({
                  success: false,
-                 message: "User already exists"
+                 message: "No user exists"
              });
         }
     }
@@ -44,4 +44,4 @@ const userPresent = async (req, res, next) => {
     }
 }
 
-module.exports = { existCheck };
+module.exports = { existCheck,userPresent };
