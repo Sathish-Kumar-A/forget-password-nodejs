@@ -26,11 +26,12 @@ router.get('/',async function (req, res, next) {
 });
 
 router.get("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.headers;
+  // console.log(email, password);
   const { collection, client } = await getCollection("password");
   try {
     let user = await collection.find({ email: email }).toArray();
-    console.log(user)
+    // console.log(user)
     if (user) {
       let correctPassword =await authenticateUser(password, user[0].password);
       console.log(correctPassword);
@@ -66,12 +67,15 @@ router.post("/register", [schemaValidate, existCheck], async (req, res) => {
   const hash = await registerUser(password);
   try {
     await collection.insertOne({ email: email, password: hash });
-    res.status(200).send("User added successfully");
+    res.status(200).send({
+      success: true,
+      message: "User added successfully"
+    });
   }
   catch (err) {
     console.log(err);
     res.status(500).send({
-      message: err
+      message: 'Internal server error'
     })
   }
   finally {
@@ -103,7 +107,7 @@ router.put("/sendmail", [userPresent], async (req, res) => {
   }
 });
 
-router.put("/entertoken",[validateToken,authenticateToken], async (req, res) => {
+router.put("/entertoken",[userPresent,validateToken,authenticateToken], async (req, res) => {
   try {
     res.status(200).send({
       success: true,
