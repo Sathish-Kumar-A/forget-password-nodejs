@@ -1,7 +1,11 @@
 const randomToken = require("random-token");
 const nodemailer = require("nodemailer");
+const { createJWTToken } = require("./JWT");
 
-const sendMailNode = async(email,token) => {
+const sendMailNode = async (req, res, next) => {
+    const { email } = req.body;
+    let token = await createJWTToken(email);
+    res.locals.token = token;
     var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -20,11 +24,14 @@ const sendMailNode = async(email,token) => {
    transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log("error", error);
-            return { success: false, message: "Mail sending failed" };
+            res.status(500).send({
+                success: false,
+                message:"Mail sending failed/ server error"
+            })
         }
         else {
-            console.log("Email sent", info.response)
-            return { success: true, message: "Mail sent Successfully" };
+            console.log("Email sent", info.response);
+            next();
         }
     });
     

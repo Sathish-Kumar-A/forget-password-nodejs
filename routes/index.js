@@ -84,12 +84,14 @@ router.post("/register", [schemaValidate, existCheck], async (req, res) => {
 });
 
 
-router.put("/sendmail", [userPresent], async (req, res) => {
+router.put("/sendmail", [userPresent,sendMailNode], async (req, res) => {
   const { collection, client } = await getCollection("password");
   const { email } = req.body;
   try {
-    let token = await createJWTToken(email);
-    await sendMailNode(email, token);
+    // let token = await createJWTToken(email);
+    // await sendMailNode(email, token);
+    const { token } = res.locals;
+    console.log(token);
     await collection.updateOne({ email: email }, { $set: { token: token } });
     res.status(200).send({
       success: true,
