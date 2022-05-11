@@ -1,3 +1,5 @@
+require("dotenv").config();
+const { Email, Pass } = process.env;
 const randomToken = require("random-token");
 const nodemailer = require("nodemailer");
 const { createJWTToken } = require("./JWT");
@@ -9,13 +11,13 @@ const sendMailNode = async (req, res, next) => {
     var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "sathish252199@gmail.com",
-            pass:"Sathish@25"
+            user: Email,
+            pass:Pass
         }
     });
 
     var mailOptions = {
-        from: 'sathish252199@gmail.com',
+        from: Email,
         to: email,
         subject: 'Change Password',
         html: `The token to change password is <b>${token}</b>`
